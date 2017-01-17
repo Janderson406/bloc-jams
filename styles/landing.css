@@ -30,12 +30,23 @@
  .selling-points {
      position: relative;
      width: 100%;
+  
  }
  
  .point {
      position: relative;
      padding: 2rem;
      text-align: center;
+     opacity: 0; /* 0 = on page load this element will not be visible.*/
+     -webkit-transform: scaleX(0.9) translateY(3rem); /*scaleX(x) to scale the element to 90% of its width. translateY(y) to to move the element 3rem down from its normal position.*/
+     -moz-transform: scaleX(0.9) translateY(3rem);
+     transform: scaleX(0.9) translateY(3rem);
+     -webkit-transition: all 0.25s ease-in-out; /*<transition-property> <transition-duration> <transition-timing-function>*/
+     -moz-transition: all 0.25s ease-in-out;
+     transition: all 0.25s ease-in-out;
+     -webkit-transition-delay: 0.2s;
+     -moz-transition-delay: 0.2s;
+     transition-delay: 0.2s;  /* delay the transition by 0.2 seconds.*/ 
  }
  
  .point .point-title {
