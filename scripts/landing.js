@@ -1,17 +1,16 @@
  var pointsArray = document.getElementsByClassName('point');
-
- var animatePoints = function(points) {
-
-     var revealPoint = function(i) {
-         points[i].style.opacity = 1;
-         points[i].style.transform = "scaleX(1) scaleY(1) translateY(0)";
-         points[i].style.msTransform = "scaleX(1) scaleY(1) translateY(0)";
-         points[i].style.WebkitTransform = "scaleX(1) scaleY(1) translateY(0)";
+ 
+ var animatePoints = function(pointsArray) {
+     
+     var revealPoint = function(points) {
+         points.style.opacity = 1;
+         points.style.transform = "scaleX(1) scaleY(1) translateY(0)";
+         points.style.msTransform = "scaleX(1) scaleY(1) translateY(0)";
+         points.style.WebkitTransform = "scaleX(1) scaleY(1) translateY(0)";
      };
 
-     for (var i = 0; i < points.length; i++) {
-         revealPoint(i);
-     }
+     forEach(pointsArray, revealPoint);
+     // callback created in utilities.js
  };
 
  window.onload = function() {
@@ -35,11 +34,3 @@
          //print the top property of the .selling-points element whenever the user scrolls
      });
  }
- 
- 
- 
-
- 
- 
- 
- 
