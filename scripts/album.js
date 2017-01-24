@@ -30,6 +30,22 @@
      ]
  };
 
+ // Assignment Example Album
+ var albumOperators = {
+     title: 'Blue Wave',
+     artist: 'Operators',
+     label: 'Operators Music',
+     year: '2016',
+     albumArtUrl: 'assets/images/album_covers/22.jpg',
+     songs: [
+         { title: 'Rome', duration: '2:32' },
+         { title: 'Control', duration: '4:31' },
+         { title: 'Cold Light', duration: '3:08'},
+         { title: 'Mission Creep', duration: '4:09' },
+         { title: 'Blue Wave', duration: '5:34'}
+     ]
+ };
+
 //We declare the objects before the function because the 
 //createSongRow function uses the information stored in the album objects.
 
@@ -45,6 +61,7 @@
      return template;
  };
 
+ var albumsArr = [albumPicasso, albumMarconi, albumOperators];
 
  var setCurrentAlbum = function(album) {
      //select all of the HTML elements required to display on the album page: title, artist, release info, image, and song list
@@ -70,6 +87,25 @@
      }
  };
  
+
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
+     var  i = 0;
+     document.getElementsByClassName("album-cover-art")[0].addEventListener('click',function(event) {
+        setCurrentAlbum(albumsArr[i]);
+        i++;
+        
+         if (i == albumsArr.length) {
+            i = 0;    
+        };     
+    });
  };
+     
+
+
+
+
+
+
+
+
