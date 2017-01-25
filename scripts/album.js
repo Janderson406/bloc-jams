@@ -90,7 +90,7 @@
 
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
-     var  i = 0;
+     var  i = 1;
      document.getElementsByClassName("album-cover-art")[0].addEventListener('click',function(event) {
         setCurrentAlbum(albumsArr[i]);
         i++;
