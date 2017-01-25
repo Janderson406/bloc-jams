@@ -36,7 +36,7 @@
  var createSongRow = function(songNumber, songName, songLength) {
      var template =
         '<tr class="album-view-song-item">'
-      + '  <td class="song-item-number">' + songNumber + '</td>'
+      + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>' //store the song # To revert the play button back to song #    
       + '  <td class="song-item-title">' + songName + '</td>'
       + '  <td class="song-item-duration">' + songLength + '</td>'
       + '</tr>'
@@ -69,7 +69,41 @@
          albumSongList.innerHTML += createSongRow(i + 1, album.songs[i].title, album.songs[i].duration);
      }
  };
+
+////////--Set Elements to add listeners to: 
+
+ var songListContainer = document.getElementsByClassName('album-view-song-list')[0];
+    //To reduce the number of event listeners, we'll use event delegation. 
+    //It allows us to listen for an event on a parent element but target the behavior on one of its children.
+    //The target parent element is the table with the class .album-view-song-list
+ var songRows = document.getElementsByClassName('album-view-song-item');
+
+ var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
+  //display the play button when we hover over the table row, change the content of the table cell with the class .song-item-number
  
- window.onload = function() {
+
+////////--Add Listeners 
+
+window.onload = function() {
      setCurrentAlbum(albumPicasso);
+     songListContainer.addEventListener('mouseover', function(event) {
+         //The target property on the event object stores the DOM element where the event occurred.
+         //first select the parent element of song's number/title/duration
+         //use the parentElement and className properties together to make sure that we only act on the table row
+         if (event.target.parentElement.className === 'album-view-song-item') {
+             event.target.parentElement.querySelector('.song-item-number').innerHTML = playButtonTemplate;
+               // Change the content from the song number to the play button's HTML
+               //use querySelector() method bc we only need to return a single element with the .song-item-number class
+         }
+     });
+     
+     // Revert the content back to the number
+     for (var i = 0; i < songRows.length; i++) {
+         songRows[i].addEventListener('mouseleave', function(event) {
+             this.children[0].innerHTML = this.children[0].getAttribute('data-song-number');
+             // Selects first child element, which is the song-item-number 
+             // The getAttribute() method takes a single argument: a string with the name of the attribute whose value 
+             // we want to retrieve. When the mouse leaves a selected table row, it will change back to the song number using the value obtained from this method.       
+         });
+     }     
  };

@@ -50,6 +50,11 @@
  
  .song-item-number {
      width: 5%;
+     min-width: 30px; /* account for width of button. Without a minimum width, the cell has the 
+                        potential to become smaller in width than the size of the button. In this scenario, 
+                        the song list content would shift to make room for the button when a user hovers over the 
+                        area to make the button appear. To avoid this, we use a minimum width to make sure there 
+                        is always room for the button. */
  }
  
  .song-item-title {
@@ -58,6 +63,27 @@
  
  .song-item-duration {
      width: 5%;
+ }
+ 
+ .album-song-button {
+     text-align: center;
+     font-size: 14px;
+     background-color: white;
+     color: rgb(210, 40, 123);
+     border-radius: 50% 50%;
+     display: inline-block;
+     width: 28px;
+     height: 28px;
+ }
+ 
+ .album-song-button:hover {
+     cursor: pointer;
+     color: white;
+     background-color: rgb(210, 40, 123);
+ }
+ 
+ .album-song-button span {
+     line-height: 28px;
  }
 
 
