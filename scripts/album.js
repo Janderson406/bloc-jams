@@ -70,16 +70,20 @@
      }
  };
 
- //traverse the DOM upward until a parent with a specified class name is found
+ //refactor to find if a) parent exists at all and b) if no parent with exact class name is found 
  var findParentByClassName = function(element, targetClass) {
-     if (element) {
+         if (element.currentParent === null) {
+             alert('No parent found');
+         }
          var currentParent = element.parentElement;
-         while (currentParent.className != targetClass && currentParent.className !== null) {
-             currentParent = currentParent.parentElement;
+         while (currentParent.className != targetClass) {
+             if (currentParent === null) {
+                 alert('No parent found with that class name');
+             }
+             currentParent = currentParent.parentElement
          }
          return currentParent;
-     }
- };
+     };
 
  //take an element based on that element's class name(s), return the element with the .song-item-number class.
  var getSongItem = function(element) {
