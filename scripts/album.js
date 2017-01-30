@@ -72,7 +72,7 @@
 
  //refactor to find if a) parent exists at all and b) if no parent with exact class name is found 
  var findParentByClassName = function(element, targetClass) {
-         if (element.currentParent === null) {
+         if (element.parentElement === null) {
              alert('No parent found');
          }
          var currentParent = element.parentElement;
