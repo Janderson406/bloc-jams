@@ -1,40 +1,44 @@
- var pointsArray = document.getElementsByClassName('point');
-
- var animatePoints = function(points) {
-
-     var revealPoint = function(i) {
-         points[i].style.opacity = 1;
-         points[i].style.transform = "scaleX(1) scaleY(1) translateY(0)";
-         points[i].style.msTransform = "scaleX(1) scaleY(1) translateY(0)";
-         points[i].style.WebkitTransform = "scaleX(1) scaleY(1) translateY(0)";
+ var animatePoints = function() {
+     var revealPoint = function() {
+         $(this).css({
+             opacity: 1,
+             transform: 'scaleX(1) translateY(0)'
+         });
      };
+     $.each($('.point'), revealPoint);
+ };     
 
-     for (var i = 0; i < points.length; i++) {
-         revealPoint(i);
-     }
- };
+//     var revealPoint = function(i) {
+//         points[i].style.opacity = 1;
+//         points[i].style.transform = "scaleX(1) scaleY(1) translateY(0)";
+//         points[i].style.msTransform = "scaleX(1) scaleY(1) translateY(0)";
+//         points[i].style.WebkitTransform = "scaleX(1) scaleY(1) translateY(0)";
+//     };
+//
+//     for (var i = 0; i < points.length; i++) {
+//         revealPoint(i);
+//     }
+// };
 
- window.onload = function() {
+ $(window).load(function() {
      
     // Automatically animate the points on a tall screen where scrolling can't trigger the animation
-     if (window.innerHeight > 950) {
-         animatePoints(pointsArray);
+     if ($(window).height() > 950) {
+         animatePoints();
      }
      
-     var sellingPoints = document.getElementsByClassName('selling-points')[0];
-     var scrollDistance = sellingPoints.getBoundingClientRect().top - window.innerHeight + 200;
+     
      //trigger the animation when a user scrolls at least 200 pixels into the .selling-points element. 
      
-     window.addEventListener('scroll', function(event) {
-         if (document.documentElement.scrollTop || document.body.scrollTop >= scrollDistance) {
-             animatePoints(pointsArray);   
+     $(window).scroll(function(event) {
+         var scrollDistance = $('.selling-points').offset().top - $(window).height() + 200;
+         if ($(window).scrollTop() >= scrollDistance) {
+             animatePoints();
+     // jQuery's scroll() "method" is still an event handler like addEventListener(), but the jQuery 
+     //wrapper obscures the appearance of events. When the window scrolls, the function executes.         
          }         
-         
-         //console.log("Current offset from the top is " + sellingPoints.getBoundingClientRect().top + " pixels");
-         //getBoundingClientRect() measures the distance (in pixels) from the outside of a selected element to the end of the viewport
-         //print the top property of the .selling-points element whenever the user scrolls
      });
- }
+ });
  
  
  
