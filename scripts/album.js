@@ -1,6 +1,10 @@
 //We declare the objects before the function because the 
 //createSongRow function uses the information stored in the album objects.
 
+ var getSongNumberCell = function(number){
+    return $('.song-item-number[data-song-number="' + number + '"]');   
+ }
+
  var createSongRow = function(songNumber, songName, songLength) {
      var template =
         '<tr class="album-view-song-item">'
@@ -10,41 +14,9 @@
       + '</tr>'
       ;
  
-    
- var setSong = function(songNumber){
-     //prevent concurrent playback
-     if (currentSoundFile) {
-         currentSoundFile.stop();
-     }
+     var $row = $(template);
      
-    currentlyPlayingSongNumber = parseInt(songNumber);
-    currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
-     //assign a new Buzz sound object. We've passed the audio file via the audioUrl property on the currentSongFromAlbum object.
-    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
-     //we've passed in a settings object that has two properties defined, formats and  preload. formats is an array 
-     //of strings with acceptable audio formats. We've only included the 'mp3' string because all of our songs are mp3s. 
-     //Setting the preload property to true tells Buzz that we want the mp3s loaded as soon as the page loads
-        formats: [ 'mp3' ],
-        preload: true
-    });
- 
-     setVolume(currentVolume);
- };
- 
- var setVolume = function(volume) {
-     if (currentSoundFile) {
-         currentSoundFile.setVolume(volume);
-     }
- };     
-
- var getSongNumberCell = function(number){
-    return $('.song-item-number[data-song-number="' + number + '"]');   
- }
-    
-    var $row = $(template);
-
-
-    var clickHandler = function() {
+     var clickHandler = function() {
         var songNumber = parseInt($(this).attr('data-song-number'));
 
         if (currentlyPlayingSongNumber !== null) {
@@ -52,12 +24,12 @@
             var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
             currentlyPlayingCell.html(currentlyPlayingSongNumber);
         }
-        if (currentlyPlayingSongNumber !== songNumber) {
-            // Switch from Play -> Pause button to indicate new song is playing.
+        if (currentlyPlayingSongNumber !== songNumber) { // Switch from Play -> Pause button to indicate new song is playing.
             $(this).html(pauseButtonTemplate);
             setSong(songNumber);
-            currentSoundFile.play();            
-             updatePlayerBarSong();            
+            currentSoundFile.play();   
+            currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+            updatePlayerBarSong();            
         } else if (currentlyPlayingSongNumber === songNumber) {
             if (currentSoundFile.isPaused()) {
                 $(this).html(pauseButtonTemplate);
@@ -94,8 +66,33 @@
      $row.hover(onHover, offHover);
      // return $row, which is created with the event listeners attached.
      return $row;
- };
+ };     
+     
+ var setSong = function(songNumber){
+     //prevent concurrent playback
+     if (currentSoundFile) {
+         currentSoundFile.stop();
+     }
 
+    currentlyPlayingSongNumber = parseInt(songNumber);
+    currentSongFromAlbum = currentAlbum.songs[songNumber - 1];
+     //assign a new Buzz sound object. We've passed the audio file via the audioUrl property on the currentSongFromAlbum object.
+    currentSoundFile = new buzz.sound(currentSongFromAlbum.audioUrl, {
+     //we've passed in a settings object that has two properties defined, formats and  preload. formats is an array 
+     //of strings with acceptable audio formats. We've only included the 'mp3' string because all of our songs are mp3s. 
+     //Setting the preload property to true tells Buzz that we want the mp3s loaded as soon as the page loads
+        formats: [ 'mp3' ],
+        preload: true
+    });
+
+     setVolume(currentVolume);
+ };
+ 
+ var setVolume = function(volume) {
+     if (currentSoundFile) {
+         currentSoundFile.setVolume(volume);
+     }
+ };   
 
  var setCurrentAlbum = function(album) {
      currentAlbum = album;     
@@ -123,7 +120,7 @@
      }
  };
 
- var trackIndex = function(album, song) {
+var trackIndex = function(album, song) {
      return album.songs.indexOf(song);
  };
 
@@ -142,7 +139,7 @@ var nextSong = function() {
     }
 
     // Set a new current song
-    currentlyPlayingSongNumber = currentSongIndex + 1;
+    setSong(currentSongIndex + 1);
     currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
     
     // Play Audio
@@ -177,7 +174,7 @@ var previousSong = function() {
     }
 
     // Set a new current song
-    currentlyPlayingSongNumber = currentSongIndex + 1;
+    setSong(currentSongIndex + 1);
     currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
     
     // Play Audio
@@ -205,6 +202,21 @@ var previousSong = function() {
      $('.main-controls .play-pause').html(playerBarPauseButton);
  };
 
+
+var togglePlayFromPlayerbar = function() {
+    var $currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
+    if (currentSoundFile.isPaused()) {
+        $currentlyPlayingCell.html(pauseButtonTemplate);
+        $(this).html(playerBarPauseButton);
+        currentSoundFile.play();
+    } else if (currentSoundFile) {
+        $currentlyPlayingCell.html(playButtonTemplate);
+        $(this).html(playerBarPlayButton);
+        currentSoundFile.pause();
+    }
+};
+
+
 ////////--Set Elements to add listeners to: 
 
 
@@ -223,6 +235,7 @@ var previousSong = function() {
 
  var $previousButton = $('.main-controls .previous');
  var $nextButton = $('.main-controls .next');
+ var $playPauseButton = $('.main-controls .play-pause');
 
 console.log("songNumber type is " + typeof songNumber + "\n and currentlyPlayingSongNumber type is " + typeof currentlyPlayingSongNumber);
  
@@ -232,4 +245,5 @@ console.log("songNumber type is " + typeof songNumber + "\n and currentlyPlaying
      setCurrentAlbum(albumPicasso);
      $previousButton.click(previousSong);
      $nextButton.click(nextSong);
+     $playPauseButton.click(togglePlayFromPlayerbar);
  });
