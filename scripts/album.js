@@ -10,7 +10,7 @@
         '<tr class="album-view-song-item">'
       + '  <td class="song-item-number" data-song-number="' + songNumber + '">' + songNumber + '</td>' //store the song # To revert the play button back to song #    
       + '  <td class="song-item-title">' + songName + '</td>'
-      + '  <td class="song-item-duration">' + songLength + '</td>'
+      + '  <td class="song-item-duration">' + filterTimeCode(songLength) + '</td>'
       + '</tr>'
       ;
  
@@ -129,6 +129,7 @@
      }
  };
 
+
 var trackIndex = function(album, song) {
      return album.songs.indexOf(song);
  };
@@ -211,6 +212,7 @@ var previousSong = function() {
      $('.currently-playing .artist-song-mobile').text(currentSongFromAlbum.title + " - " + currentAlbum.artist);
      
      $('.main-controls .play-pause').html(playerBarPauseButton);
+     setTotalTimeInPlayerBar(filterTimeCode(currentSongFromAlbum.length)); //// pass in current song length? 
  };
 
 
@@ -228,14 +230,59 @@ var togglePlayFromPlayerbar = function() {
     }
 };
 
+
+
+
+var setCurrentTimeInPlayerBar = function(currentTime) {
+    var $currentTime = $('.seek-control .current-time');
+    $currentTime.text(currentTime);        
+}; 
+// sets the text of the element with the .current-time class to the current time in the song.
+// Add the method to updateSeekBarWhileSongPlays() so the current time updates with song playback.
+
+var setTotalTimeInPlayerBar = function(totalTime) {
+    var $totalTime = $('.seek-control .total-time');
+};
+// sets the text of the element with the .total-time class to the length of the song.
+// Add the method to updatePlayerBarSong() so the total time is set when a song first plays.
+
+
+var filterTimeCode = function(timeInSeconds) {
+    var numSeconds = parseFloat(timeInSeconds);
+    var seconds = Math.floor(numSeconds);
+    var minutes = Math.floor(seconds / 60);
+    var displaySeconds = seconds % 60;
+    if (displaySeconds < 10){
+        var clock = minutes + ':0' + displaySeconds;
+    } else {
+        var clock = minutes + ':' + displaySeconds;       // output display needs work still?
+    };
+    return clock; // return values to display time
+
+};
+// Use the parseFloat() method to get the seconds in number form
+// Store variables for whole seconds and whole minutes (hint: use Math.floor() to round numbers down).
+// Return the time in the format X:XX
+
+// Wrap the arguments passed to setCurrentTimeInPlayerBar() and setTotalTimeInPlayerBar() in a filterTimeCode() call so the time output below the seek bar is formatted.
+
+// Wrap the songLength variable in createSongRow() in a filterTimeCode() call so the time lengths are formatted.
+
+
+
+
+
+
  var updateSeekBarWhileSongPlays = function() {
      if (currentSoundFile) {
          //bind() the timeupdate event to currentSoundFile. timeupdate is a custom Buzz event that fires repeatedly while time elapses during song playback.
          currentSoundFile.bind('timeupdate', function(event) {
              var seekBarFillRatio = this.getTime() / this.getDuration();
              var $seekBar = $('.seek-control .seek-bar');
- 
+             var currentTime = this.getTime(); //currentTime undefined
+             //console.log(currentTime);
              updateSeekPercentage($seekBar, seekBarFillRatio);
+             setCurrentTimeInPlayerBar(filterTimeCode(currentTime));   ////////// 
          });
      }
  };
